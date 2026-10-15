@@ -70,6 +70,12 @@ def srt_time(value):
 def make_loop(verse):
     target = BUILD / "loops" / f"scene_{verse}.mp4"
     target.parent.mkdir(parents=True, exist_ok=True)
+    ai_clip = BUILD / "ai_clips" / f"scene_{verse}.mp4"
+    if ai_clip.is_file():
+        run("ffmpeg", "-y", "-v", "error", "-i", ai_clip, "-an",
+            "-vf", "scale=360:640:force_original_aspect_ratio=increase,crop=360:640,fps=24",
+            "-c:v", "libx264", "-preset", "veryfast", "-pix_fmt", "yuv420p", target)
+        return target
     run("ffmpeg", "-y", "-v", "error", "-framerate", "6", "-i", RENDERS / f"scene_{verse}" / "%03d.png",
         "-c:v", "libx264", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-r", "24", target)
     return target

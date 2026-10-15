@@ -5,7 +5,7 @@
   "scenes": [
     {"verse": 1, "id": "beginning", "visual": "Dark sea and a small distant celestial form"},
     {"verse": 2, "id": "deep", "visual": "Slow waves in a dark void"},
-    {"verse": 3, "id": "light", "visual": "A bright sphere rises over the water"},
+    {"verse": 3, "id": "light", "visual": "A bright sphere rises over the water", "ai_prompt": "Vertical 9:16, 3-second cinematic animated shot for a family-friendly Genesis story. An ancient dark ocean under a starless sky. A single warm beam of light blooms above the water and spreads across gentle waves. Stylized painterly 3D animation, rich deep-blue and gold palette, soft volumetric light, slow camera push forward, continuous motion, no people, no faces, no text, no logos, no subtitles."},
     {"verse": 4, "id": "separation", "visual": "Warm light parts the dark horizon"},
     {"verse": 5, "id": "day_night", "visual": "The sun crosses from day toward night"}
   ],

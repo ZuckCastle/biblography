@@ -5,6 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
+      experimental_ai_scene:
+        description: Try one free-tier AI clip for verse 3 (requires FREE_AI_API_KEY secret)
+        type: boolean
+        default: false
       upload_to_youtube:
         description: Upload four videos after review
         type: boolean
@@ -45,6 +49,11 @@ jobs:
         run: python3 scripts/ingest.py
       - name: Render procedural 3D animation on GitHub CPU
         run: xvfb-run -a blender -b -t 2 --python scripts/render_blender.py -- --out build/frames --fps 6 --frames-per-scene 12
+      - name: Try experimental Free.ai video generation for verse 3
+        if: github.event_name == 'workflow_dispatch' && inputs.experimental_ai_scene
+        env:
+          FREE_AI_API_KEY: ${{ secrets.FREE_AI_API_KEY }}
+        run: python3 scripts/generate_freeai.py
       - name: Assemble English and Tagalog episodes and Shorts
         run: python3 scripts/assemble.py
       - name: Verify all four media files

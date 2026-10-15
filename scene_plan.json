@@ -1,0 +1,28 @@
+{
+  "format_version": 1,
+  "reference": "Genesis 1:1-5",
+  "visual_style": "Minimal low-poly 3D water, horizon, and light; no human depiction",
+  "scenes": [
+    {"verse": 1, "id": "beginning", "visual": "Dark sea and a small distant celestial form"},
+    {"verse": 2, "id": "deep", "visual": "Slow waves in a dark void"},
+    {"verse": 3, "id": "light", "visual": "A bright sphere rises over the water"},
+    {"verse": 4, "id": "separation", "visual": "Warm light parts the dark horizon"},
+    {"verse": 5, "id": "day_night", "visual": "The sun crosses from day toward night"}
+  ],
+  "dialogue": {
+    "english": {
+      "3": [
+        {"speaker": "Narrator", "text": "God said,"},
+        {"speaker": "God", "text": "Let there be light."},
+        {"speaker": "Narrator", "text": "And there was light."}
+      ]
+    },
+    "tagalog": {
+      "3": [
+        {"speaker": "Tagapagsalaysay", "text": "Sinabi ng Diyos,"},
+        {"speaker": "Diyos", "text": "Magkaroon ng liwanag."},
+        {"speaker": "Tagapagsalaysay", "text": "At nagkaroon ng liwanag."}
+      ]
+    }
+  }
+}

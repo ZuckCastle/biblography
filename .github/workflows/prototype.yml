@@ -1,0 +1,91 @@
+name: Genesis prototype
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      upload_to_youtube:
+        description: Upload four videos after review
+        type: boolean
+        default: false
+      approval_phrase:
+        description: Type UPLOAD for private or unlisted, PUBLISH_PUBLIC for public
+        type: string
+        default: ""
+      visibility:
+        description: YouTube visibility
+        type: choice
+        options: [private, unlisted, public]
+        default: private
+      tagalog_reviewed:
+        description: A human reviewed the Tagalog wording and voice
+        type: boolean
+        default: false
+      made_for_kids:
+        description: You determined the correct audience setting for these videos
+        type: choice
+        options: [unset, "true", "false"]
+        default: unset
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install open-source render and speech tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender xvfb ffmpeg espeak-ng fonts-dejavu-core
+      - name: Check scripture rights and scene plan
+        run: python3 scripts/ingest.py
+      - name: Render procedural 3D animation on GitHub CPU
+        run: xvfb-run -a blender -b -t 2 --python scripts/render_blender.py -- --out build/frames --fps 6 --frames-per-scene 12
+      - name: Assemble English and Tagalog episodes and Shorts
+        run: python3 scripts/assemble.py
+      - name: Verify all four media files
+        run: python3 scripts/verify_outputs.py
+      - name: Upload videos and captions as workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: genesis-1-1-5-prototype
+          path: build/deliverables/
+          retention-days: 7
+          if-no-files-found: error
+
+  youtube:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.upload_to_youtube &&
+      inputs.tagalog_reviewed &&
+      inputs.made_for_kids != 'unset' &&
+      ((inputs.visibility == 'public' && inputs.approval_phrase == 'PUBLISH_PUBLIC') ||
+       (inputs.visibility != 'public' && inputs.approval_phrase == 'UPLOAD'))
+    needs: build
+    runs-on: ubuntu-24.04
+    environment: youtube-publish
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: genesis-1-1-5-prototype
+          path: build/deliverables/
+      - name: Install upload client
+        run: pip install -r requirements.txt
+      - name: Upload to the authorized channel
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_VISIBILITY: ${{ inputs.visibility }}
+          TAGALOG_REVIEWED: ${{ inputs.tagalog_reviewed }}
+          MADE_FOR_KIDS: ${{ inputs.made_for_kids }}
+        run: python scripts/upload_youtube.py

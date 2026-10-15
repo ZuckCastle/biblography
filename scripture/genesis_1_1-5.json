@@ -1,0 +1,31 @@
+{
+  "reference": "Genesis 1:1-5",
+  "english": {
+    "name": "World English Bible Classic",
+    "rights": "public-domain",
+    "rights_url": "https://ebible.org/eng-web/copyright.htm",
+    "source_url": "https://ebible.org/eng-web/GEN01.htm",
+    "verses": {
+      "1": "In the beginning, God created the heavens and the earth.",
+      "2": "The earth was formless and empty. Darkness was on the surface of the deep and God’s Spirit was hovering over the surface of the waters.",
+      "3": "God said, “Let there be light,” and there was light.",
+      "4": "God saw the light, and saw that it was good. God divided the light from the darkness.",
+      "5": "God called the light “day”, and the darkness he called “night”. There was evening and there was morning, the first day."
+    }
+  },
+  "tagalog": {
+    "name": "Original Tagalog draft adaptation of WEB",
+    "rights": "original-draft",
+    "rights_url": "https://ebible.org/eng-web/copyright.htm",
+    "source_url": "https://ebible.org/eng-web/GEN01.htm",
+    "translation_status": "draft-needs-human-review",
+    "verses": {
+      "1": "Sa simula, nilikha ng Diyos ang langit at ang lupa.",
+      "2": "Wala pang anyo at laman ang lupa. Nababalot ng dilim ang kalaliman, at ang Espiritu ng Diyos ay kumikilos sa ibabaw ng tubig.",
+      "3": "Sinabi ng Diyos, “Magkaroon ng liwanag,” at nagkaroon ng liwanag.",
+      "4": "Nakita ng Diyos na mabuti ang liwanag. Inihiwalay niya ang liwanag sa dilim.",
+      "5": "Tinawag ng Diyos na araw ang liwanag, at gabi ang dilim. Lumipas ang gabi at dumating ang umaga: ang unang araw."
+    }
+  }
+}
+

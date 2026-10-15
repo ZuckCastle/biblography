@@ -125,14 +125,21 @@ def main():
     for language in ("english", "tagalog"):
         make_variant(data, language, "episode", range(1, 6), loops)
         make_variant(data, language, "short", range(1, 4), loops)
+    ai_note = (
+        "Verse 3 AI clip: ByteDance/AnimateDiff-Lightning on Hugging Face ZeroGPU; ToonYou base; review model and base-model rights before publishing.\n"
+        if (BUILD / "ai_clips" / "scene_3.mp4").is_file()
+        else "Visuals: procedural Blender animation only; no AI-generated clip.\n"
+    )
     (OUTPUT / "PROVENANCE.txt").write_text(
         "English scripture: World English Bible Classic, public domain.\n"
         "https://ebible.org/eng-web/GEN01.htm\n"
         "https://ebible.org/eng-web/copyright.htm\n\n"
         "Tagalog: original draft adaptation of the English WEB text; human language and theological review required before publishing.\n"
-        "Voice: eSpeak NG English; Indonesian voice used as a pronunciation proxy for Tagalog.\n",
+        "Voice: eSpeak NG English; Indonesian voice used as a pronunciation proxy for Tagalog.\n"
+        + ai_note,
         encoding="utf-8")
 
 
 if __name__ == "__main__":
     main()
+

@@ -6,7 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       experimental_ai_scene:
-        description: Try one API AI clip for verse 3 (requires paid Free.ai video tokens)
+        description: Try one free Hugging Face ZeroGPU AI clip for verse 3
+        type: boolean
+        default: false
+      ai_rights_reviewed:
+        description: You reviewed the AI model and base model rights before YouTube upload
         type: boolean
         default: false
       upload_to_youtube:
@@ -49,12 +53,17 @@ jobs:
         run: python3 scripts/ingest.py
       - name: Render procedural 3D animation on GitHub CPU
         run: xvfb-run -a blender -b -t 2 --python scripts/render_blender.py -- --out build/frames --fps 6 --frames-per-scene 12
-      - name: Try experimental Free.ai video generation for verse 3
-        if: github.event_name == 'workflow_dispatch' && inputs.experimental_ai_scene
+      - name: Try free Hugging Face video generation for verse 3
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.experimental_ai_scene) ||
+          (github.event_name == 'push' && contains(github.event.head_commit.message, '[hf-preview]'))
         continue-on-error: true
         env:
-          FREE_AI_API_KEY: ${{ secrets.FREE_AI_API_KEY }}
-        run: python3 scripts/generate_freeai.py
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python3 -m venv /tmp/genesis-hf
+          /tmp/genesis-hf/bin/pip install --disable-pip-version-check gradio_client
+          /tmp/genesis-hf/bin/python scripts/generate_hf.py
       - name: Assemble English and Tagalog episodes and Shorts
         run: python3 scripts/assemble.py
       - name: Verify all four media files
@@ -72,6 +81,7 @@ jobs:
       github.event_name == 'workflow_dispatch' &&
       inputs.upload_to_youtube &&
       inputs.tagalog_reviewed &&
+      (!inputs.experimental_ai_scene || inputs.ai_rights_reviewed) &&
       inputs.made_for_kids != 'unset' &&
       ((inputs.visibility == 'public' && inputs.approval_phrase == 'PUBLISH_PUBLIC') ||
        (inputs.visibility != 'public' && inputs.approval_phrase == 'UPLOAD'))

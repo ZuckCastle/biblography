@@ -10,11 +10,11 @@ One YouTube channel, two language series. This first cloud workflow makes four f
 
 The build job uses `ubuntu-24.04` on GitHub, installs Blender, FFmpeg, eSpeak NG, and Xvfb, and does all rendering there. No local PC is needed once the repository is on GitHub. The repository contains no generated video; videos are workflow artifacts retained for seven days.
 
-### Experimental free-tier AI shot
+### Experimental AI shot (paid API video access required)
 
-The manual workflow also has `experimental_ai_scene`. If enabled, GitHub Actions asks [Free.ai's CogVideoX API](https://free.ai/models/cogvideox-2b/) for **one 3-second shot for verse 3** and uses it in the English and Tagalog cuts. The artifact also contains `experimental_ai_scene_3.mp4` so it can be judged separately. Add your own `FREE_AI_API_KEY` as a GitHub Actions secret before enabling this option. Never paste the key into a commit or workflow input.
+The manual workflow also has `experimental_ai_scene`. If enabled, GitHub Actions asks [Free.ai's CogVideoX API](https://free.ai/models/cogvideox-2b/) for **one 3-second shot for verse 3** and uses it in the English and Tagalog cuts. The artifact also contains `experimental_ai_scene_3.mp4` so it can be judged separately. Add your own `FREE_AI_API_KEY` as a GitHub Actions secret before enabling this option. Never paste the key into a commit or workflow input. Only enable it if you have deliberately obtained API video tokens; charges or token consumption may apply.
 
-This is a quality experiment, not a proven production provider. Its published pages disagree on clip cost and daily allowance; a free account may only permit one short clip per day or less. The workflow makes one request only and fails on a missing key, quota error, or unsupported response instead of silently falling back. Use an account without purchased credits or an attached payment method if zero spend is essential. We have not yet run this optional route with a real account. The default Blender build remains the tested path.
+We tested this option with a free API key on 2026-10-15. Free.ai returned `HTTP 429` with `not_in_tier`: **free API keys do not include video generation**; its website free video allowance is separate. The earlier suggestion that this API could generate a free clip from GitHub Actions was incorrect. The workflow now treats a failed AI attempt as optional, assembles the Blender output, and uploads the four videos. A successful API clip is still unverified. The default Blender build remains the tested zero-budget path.
 
 ## Scripture and translation safeguards
 
@@ -49,3 +49,4 @@ python3 scripts/assemble.py
 ```
 
 The workflow installs these tools on each cloud run. The optional upload step additionally installs `requirements.txt`.
+

@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       experimental_ai_scene:
-        description: Try one free-tier AI clip for verse 3 (requires FREE_AI_API_KEY secret)
+        description: Try one API AI clip for verse 3 (requires paid Free.ai video tokens)
         type: boolean
         default: false
       upload_to_youtube:
@@ -50,9 +50,8 @@ jobs:
       - name: Render procedural 3D animation on GitHub CPU
         run: xvfb-run -a blender -b -t 2 --python scripts/render_blender.py -- --out build/frames --fps 6 --frames-per-scene 12
       - name: Try experimental Free.ai video generation for verse 3
-        if: >-
-          (github.event_name == 'workflow_dispatch' && inputs.experimental_ai_scene) ||
-          (github.event_name == 'push' && contains(github.event.head_commit.message, '[ai-preview]'))
+        if: github.event_name == 'workflow_dispatch' && inputs.experimental_ai_scene
+        continue-on-error: true
         env:
           FREE_AI_API_KEY: ${{ secrets.FREE_AI_API_KEY }}
         run: python3 scripts/generate_freeai.py

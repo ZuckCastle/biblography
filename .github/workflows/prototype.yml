@@ -50,7 +50,9 @@ jobs:
       - name: Render procedural 3D animation on GitHub CPU
         run: xvfb-run -a blender -b -t 2 --python scripts/render_blender.py -- --out build/frames --fps 6 --frames-per-scene 12
       - name: Try experimental Free.ai video generation for verse 3
-        if: github.event_name == 'workflow_dispatch' && inputs.experimental_ai_scene
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.experimental_ai_scene) ||
+          (github.event_name == 'push' && contains(github.event.head_commit.message, '[ai-preview]'))
         env:
           FREE_AI_API_KEY: ${{ secrets.FREE_AI_API_KEY }}
         run: python3 scripts/generate_freeai.py
@@ -98,3 +100,4 @@ jobs:
           TAGALOG_REVIEWED: ${{ inputs.tagalog_reviewed }}
           MADE_FOR_KIDS: ${{ inputs.made_for_kids }}
         run: python scripts/upload_youtube.py
+
